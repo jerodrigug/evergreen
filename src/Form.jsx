@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { Form, Formik, Field } from 'formik'
-import { TextField } from 'formik-material-ui'
+import { TextField, Select } from 'formik-material-ui'
 
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 // import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
+// import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -52,7 +53,40 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function SignIn() {
+  const [contacts, setContacts] = useState({})
   const classes = useStyles()
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        console.log('hola')
+        const response = await axios.get(
+          `https://us-central1-topicostelematica.cloudfunctions.net/api/contacts`
+        )
+        const res = await response.json()
+        console.log(res)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchContacts()
+    // console.log('hola')
+    // axios
+    //   .get(
+    //     `https://us-central1-topicostelematica.cloudfunctions.net/api/contacts`
+    //   )
+    //   .then((res) => {
+    //     console.log()
+    //     const contact = res.data
+    //     setContacts({ contact })
+    //   })
+    // console.log('adios')
+  }, [])
+
+  const handleSubmit = (values, form) => {
+    console.log(values)
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -70,55 +104,65 @@ export default function SignIn() {
             phone_number: '300',
             message: '',
           }}
+          onSubmit={handleSubmit}
         >
           {({ values }) => {
-            console.log(values)
+            const { channel } = values
             return (
               <Form>
                 <FormControl variant="outlined" fullWidth>
                   <InputLabel id="channel-label">Canal</InputLabel>
-                  <Select labelId="channel-label" id="channel" label="Canal">
+                  <Field
+                    labelId="channel-label"
+                    name="channel"
+                    label="Canal"
+                    required
+                    component={Select}
+                  >
                     <MenuItem value="">
                       <em>Selecciona una opción</em>
                     </MenuItem>
                     <MenuItem value="email">Correo electrónico</MenuItem>
                     <MenuItem value="sms">SMS</MenuItem>
-                  </Select>
+                  </Field>
                 </FormControl>
 
-                <Field
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="Correo electrónico"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  component={TextField}
-                />
+                {channel === 'email' && (
+                  <Field
+                    variant="outlined"
+                    margin="normal"
+                    label="Correo electrónico"
+                    name="email"
+                    autoComplete="email"
+                    component={TextField}
+                    required={channel === 'email'}
+                    autoFocus
+                    fullWidth
+                  />
+                )}
+
+                {channel === 'sms' && (
+                  <Field
+                    variant="outlined"
+                    margin="normal"
+                    label="Número de celular"
+                    name="phone_number"
+                    component={TextField}
+                    required={values.channel === 'sms'}
+                    autoFocus
+                    fullWidth
+                  />
+                )}
 
                 <Field
                   variant="outlined"
                   margin="normal"
-                  required
-                  fullWidth
-                  label="Número de celular"
-                  name="phone_number"
-                  autoFocus
+                  name="message"
+                  label="Mensaje"
                   component={TextField}
-                />
-
-                <Field
-                  variant="outlined"
-                  margin="normal"
                   required
                   fullWidth
                   multiline
-                  name="message"
-                  label="Mensaje"
-                  id="message"
-                  component={TextField}
                 />
 
                 <Button
