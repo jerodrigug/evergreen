@@ -1,12 +1,8 @@
-import 'fontsource-roboto';
-import logo from './logo.svg';
-import './App.css';
+import 'fontsource-roboto'
 import Form from './Form'
 
 function App() {
-  return (
-    <Form />
-  );
+  return <Form />
 }
 
-export default App;
+export default App
