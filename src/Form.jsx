@@ -1,9 +1,10 @@
 import React from 'react'
-import { Form, Formik } from 'formik'
+import { Form, Formik, Field } from 'formik'
+import { TextField } from 'formik-material-ui'
 
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import TextField from '@material-ui/core/TextField'
+// import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
@@ -66,7 +67,7 @@ export default function SignIn() {
           initialValues={{
             channel: '',
             email: 'hola',
-            phone_number: '',
+            phone_number: '300',
             message: '',
           }}
         >
@@ -85,30 +86,30 @@ export default function SignIn() {
                   </Select>
                 </FormControl>
 
-                <TextField
+                <Field
                   variant="outlined"
                   margin="normal"
                   required
                   fullWidth
-                  id="email"
                   label="Correo electrónico"
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  component={TextField}
                 />
 
-                <TextField
+                <Field
                   variant="outlined"
                   margin="normal"
                   required
                   fullWidth
-                  id="phone_number"
                   label="Número de celular"
                   name="phone_number"
                   autoFocus
+                  component={TextField}
                 />
 
-                <TextField
+                <Field
                   variant="outlined"
                   margin="normal"
                   required
@@ -117,6 +118,7 @@ export default function SignIn() {
                   name="message"
                   label="Mensaje"
                   id="message"
+                  component={TextField}
                 />
 
                 <Button
