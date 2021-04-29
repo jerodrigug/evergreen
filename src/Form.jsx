@@ -84,36 +84,18 @@ export default function SignIn() {
     switch (values.chanel) {
       case 'email':
         if (values.contact_type === 'new') {
-          const responsePostEmail = await contactService.postOneEmail(
-            values.receiver,
-            values.email
-          )
-          const responseSendEmail = await contactService.sendEmail(
-            values.email,
-            values.message
-          )
+          await contactService.postOneEmail(values.receiver, values.email)
+          await contactService.sendEmail(values.email, values.message)
         } else {
-          const response = await contactService.sendEmail(
-            values.email,
-            values.message
-          )
+          await contactService.sendEmail(values.email, values.message)
         }
         break
       case 'sms':
         if (values.contact_type === 'new') {
-          const responsePostSms = await contactService.postOneContact(
-            values.receiver,
-            values.message
-          )
-          const responseSendSms = await contactService.sendSms(
-            values.phone_number,
-            values.message
-          )
+          await contactService.postOneContact(values.receiver, values.message)
+          await contactService.sendSms(values.phone_number, values.message)
         } else {
-          const response = await contactService.sendSms(
-            values.phone_number,
-            values.message
-          )
+          await contactService.sendSms(values.phone_number, values.message)
         }
         break
       default:
