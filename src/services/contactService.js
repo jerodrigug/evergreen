@@ -69,4 +69,11 @@ const sendEmail = async (email, text) => {
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getSMSContacts, getEmailContacts, postOneContact }
+export default {
+  getSMSContacts,
+  getEmailContacts,
+  postOneContact,
+  sendSms,
+  sendEmail,
+  postOneEmail,
+}
