@@ -92,7 +92,10 @@ export default function SignIn() {
         break
       case 'sms':
         if (values.contact_type === 'new') {
-          await contactService.postOneContact(values.receiver, values.message)
+          await contactService.postOneContact(
+            values.receiver,
+            values.phone_number
+          )
           await contactService.sendSms(values.phone_number, values.message)
         } else {
           await contactService.sendSms(values.phone_number, values.message)

@@ -13,11 +13,10 @@ const getEmailContacts = async () => {
 }
 
 const postOneContact = async (name, number) => {
-  const data = JSON.stringify({ name, number })
   try {
     const response = await axios.post(
       `https://us-central1-topicostelematica.cloudfunctions.net/api/contact`,
-      data
+      { name, number }
     )
     console.log('contacto posteado')
     return response
@@ -27,11 +26,10 @@ const postOneContact = async (name, number) => {
 }
 
 const postOneEmail = async (name, email) => {
-  const data = JSON.stringify({ name, email })
   try {
     const response = await axios.post(
       `https://us-central1-topicostelematica.cloudfunctions.net/api/email`,
-      data
+      { name, email }
     )
     console.log('email posteado')
     return response
@@ -41,11 +39,10 @@ const postOneEmail = async (name, email) => {
 }
 
 const sendSms = async (number, text) => {
-  const data = JSON.stringify({ number, text })
   try {
     const response = await axios.post(
       `https://us-central1-topicostelematica.cloudfunctions.net/api/sendsms`,
-      data
+      { number, text }
     )
     console.log('sms enviado')
     return response
@@ -55,11 +52,10 @@ const sendSms = async (number, text) => {
 }
 
 const sendEmail = async (email, text) => {
-  const data = JSON.stringify({ email, text })
   try {
     const response = await axios.post(
       `https://us-central1-topicostelematica.cloudfunctions.net/api/sendemail`,
-      data
+      { email, text }
     )
     console.log('email enviado')
     return response
