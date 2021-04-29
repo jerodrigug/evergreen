@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { Form, Formik, Field } from 'formik'
 import { TextField, Select } from 'formik-material-ui'
 
@@ -15,6 +14,7 @@ import Container from '@material-ui/core/Container'
 import { makeStyles } from '@material-ui/core/styles'
 
 import EvergreenLogo from './images/EvergreenLogo.png'
+import contactService from './services/contactService'
 
 function Copyright() {
   return (
@@ -59,9 +59,7 @@ export default function SignIn() {
     const fetchContacts = async () => {
       try {
         console.log('hola')
-        const response = await axios.get(
-          `https://us-central1-topicostelematica.cloudfunctions.net/api/contacts`
-        )
+        const response = await contactService.getSMSContacts()
         setContacts(response.data)
       } catch (error) {
         console.error(error)
@@ -97,7 +95,16 @@ export default function SignIn() {
         >
           {(form) => {
             const { channel, contact_type } = form.values
-            console.log(form.values)
+
+            const handleReceiverChange = (_, { props }) => {
+              const { value } = props
+              form.setFieldValue('receiver', value)
+
+              form.setFieldValue(
+                'phone_number',
+                contacts.find((contact) => contact.id === value).number
+              )
+            }
 
             const receivers = channel === 'sms' ? contacts : null
 
@@ -157,15 +164,7 @@ export default function SignIn() {
                       name="receiver"
                       label="Remitente"
                       component={Select}
-                      onChange={({ target: { value } }) => {
-                        form.setFieldvalue(
-                          'phone_number',
-                          contacts.find((contact) => {
-                            console.log(contact)
-                            return contact.id === value
-                          }).number
-                        )
-                      }}
+                      onChange={handleReceiverChange}
                       required
                     >
                       <MenuItem value="">
