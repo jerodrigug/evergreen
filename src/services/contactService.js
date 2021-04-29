@@ -39,5 +39,20 @@ const sendSms = async (number, text) => {
     console.error(error)
   }
 }
+
+const sendEmail = async (email, text) => {
+  const data = JSON.stringify({ email, text })
+  try {
+    const response = await axios.post(
+      `https://us-central1-topicostelematica.cloudfunctions.net/api/sendemail`,
+      data
+    )
+    console.log('email enviado')
+    return response
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default { getSMSContacts, getEmailContacts, postOneContact }
