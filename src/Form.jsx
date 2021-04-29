@@ -109,10 +109,18 @@ export default function SignIn() {
             const handleReceiverChange = (_, { props }) => {
               const { value } = props
               form.setFieldValue('receiver', value)
-              form.setFieldValue(
-                'phone_number',
-                contacts.find((contact) => contact.id === value).number
-              )
+              if (channel === 'sms')
+                form.setFieldValue(
+                  'phone_number',
+                  contacts.find((contact) => contact.id === value).number
+                )
+
+              if (channel === 'email') {
+                form.setFieldValue(
+                  'email',
+                  emails.find((email) => email.id === value).email
+                )
+              }
             }
 
             const receivers = channel === 'sms' ? contacts : emails
@@ -207,6 +215,7 @@ export default function SignIn() {
                     autoComplete="email"
                     component={TextField}
                     required={channel === 'email'}
+                    disabled={contact_type === 'existent'}
                     autoFocus
                     fullWidth
                   />
@@ -220,6 +229,7 @@ export default function SignIn() {
                     name="phone_number"
                     component={TextField}
                     required={channel === 'sms'}
+                    disabled={contact_type === 'existent'}
                     autoFocus
                     fullWidth
                   />
