@@ -53,12 +53,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const [contacts, setContacts] = useState({})
+  const [emails, setEmails] = useState({})
   const classes = useStyles()
 
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        console.log('hola')
         const response = await contactService.getSMSContacts()
         setContacts(response.data)
       } catch (error) {
@@ -66,7 +66,17 @@ export default function SignIn() {
       }
     }
 
+    const fetchEmails = async () => {
+      try {
+        const response = await contactService.getEmailContacts()
+        setEmails(response.data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
     fetchContacts()
+    fetchEmails()
   }, [])
 
   const handleSubmit = (values, form) => {
@@ -99,14 +109,13 @@ export default function SignIn() {
             const handleReceiverChange = (_, { props }) => {
               const { value } = props
               form.setFieldValue('receiver', value)
-
               form.setFieldValue(
                 'phone_number',
                 contacts.find((contact) => contact.id === value).number
               )
             }
 
-            const receivers = channel === 'sms' ? contacts : null
+            const receivers = channel === 'sms' ? contacts : emails
 
             return (
               <Form>
