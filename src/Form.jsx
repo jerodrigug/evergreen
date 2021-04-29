@@ -79,8 +79,46 @@ export default function SignIn() {
     fetchEmails()
   }, [])
 
-  const handleSubmit = (values, form) => {
+  const handleSubmit = async (values, form) => {
     console.log(values)
+    switch (values.chanel) {
+      case 'email':
+        if (values.contact_type === 'new') {
+          const responsePostEmail = await contactService.postOneEmail(
+            values.receiver,
+            values.email
+          )
+          const responseSendEmail = await contactService.sendEmail(
+            values.email,
+            values.message
+          )
+        } else {
+          const response = await contactService.sendEmail(
+            values.email,
+            values.message
+          )
+        }
+        break
+      case 'sms':
+        if (values.contact_type === 'new') {
+          const responsePostSms = await contactService.postOneContact(
+            values.receiver,
+            values.message
+          )
+          const responseSendSms = await contactService.sendSms(
+            values.phone_number,
+            values.message
+          )
+        } else {
+          const response = await contactService.sendSms(
+            values.phone_number,
+            values.message
+          )
+        }
+        break
+      default:
+        break
+    }
   }
 
   return (

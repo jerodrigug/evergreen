@@ -73,7 +73,7 @@ export default {
   getSMSContacts,
   getEmailContacts,
   postOneContact,
-  postOneEmail,
   sendSms,
   sendEmail,
+  postOneEmail,
 }
