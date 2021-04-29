@@ -5,8 +5,6 @@ import { TextField, Select } from 'formik-material-ui'
 
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
-// import TextField from '@material-ui/core/TextField'
-// import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -47,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
+  marginTop: { marginTop: theme.spacing(2) },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -63,25 +62,13 @@ export default function SignIn() {
         const response = await axios.get(
           `https://us-central1-topicostelematica.cloudfunctions.net/api/contacts`
         )
-        const res = await response.json()
-        console.log(res)
+        setContacts(response.data)
       } catch (error) {
         console.error(error)
       }
     }
 
     fetchContacts()
-    // console.log('hola')
-    // axios
-    //   .get(
-    //     `https://us-central1-topicostelematica.cloudfunctions.net/api/contacts`
-    //   )
-    //   .then((res) => {
-    //     console.log()
-    //     const contact = res.data
-    //     setContacts({ contact })
-    //   })
-    // console.log('adios')
   }, [])
 
   const handleSubmit = (values, form) => {
@@ -100,14 +87,20 @@ export default function SignIn() {
         <Formik
           initialValues={{
             channel: '',
-            email: 'hola',
-            phone_number: '300',
+            contact_type: '',
+            receiver: '',
+            email: '',
+            phone_number: '',
             message: '',
           }}
           onSubmit={handleSubmit}
         >
-          {({ values }) => {
-            const { channel } = values
+          {(form) => {
+            const { channel, contact_type } = form.values
+            console.log(form.values)
+
+            const receivers = channel === 'sms' ? contacts : null
+
             return (
               <Form>
                 <FormControl variant="outlined" fullWidth>
@@ -126,6 +119,76 @@ export default function SignIn() {
                     <MenuItem value="sms">SMS</MenuItem>
                   </Field>
                 </FormControl>
+
+                <FormControl
+                  variant="outlined"
+                  fullWidth
+                  className={classes.marginTop}
+                >
+                  <InputLabel id="contact_type-label">
+                    Tipo de contacto
+                  </InputLabel>
+                  <Field
+                    labelId="contact_type-label"
+                    name="contact_type"
+                    label="Tipo de contacto"
+                    required
+                    component={Select}
+                  >
+                    <MenuItem value="">
+                      <em>Selecciona una opción</em>
+                    </MenuItem>
+                    <MenuItem value="new">Nuevo</MenuItem>
+                    <MenuItem value="existent">Existente</MenuItem>
+                  </Field>
+                </FormControl>
+
+                {contact_type === 'existent' ? (
+                  <FormControl
+                    variant="outlined"
+                    fullWidth
+                    className={classes.marginTop}
+                  >
+                    <InputLabel id="contact_type-label">
+                      Destinatario
+                    </InputLabel>
+                    <Field
+                      labelId="receiver-label"
+                      name="receiver"
+                      label="Remitente"
+                      component={Select}
+                      onChange={({ target: { value } }) => {
+                        form.setFieldvalue(
+                          'phone_number',
+                          contacts.find((contact) => {
+                            console.log(contact)
+                            return contact.id === value
+                          }).number
+                        )
+                      }}
+                      required
+                    >
+                      <MenuItem value="">
+                        <em>Selecciona una opción</em>
+                      </MenuItem>
+                      {receivers.map((contact) => (
+                        <MenuItem value={contact.id}>{contact.name}</MenuItem>
+                      ))}
+                    </Field>
+                  </FormControl>
+                ) : (
+                  <Field
+                    variant="outlined"
+                    margin="normal"
+                    label="Remitente"
+                    name="receiver"
+                    component={TextField}
+                    disabled={contact_type === ''}
+                    required
+                    autoFocus
+                    fullWidth
+                  />
+                )}
 
                 {channel === 'email' && (
                   <Field
@@ -148,7 +211,7 @@ export default function SignIn() {
                     label="Número de celular"
                     name="phone_number"
                     component={TextField}
-                    required={values.channel === 'sms'}
+                    required={channel === 'sms'}
                     autoFocus
                     fullWidth
                   />
