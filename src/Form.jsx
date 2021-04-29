@@ -81,7 +81,7 @@ export default function SignIn() {
 
   const handleSubmit = async (values, form) => {
     console.log(values)
-    switch (values.chanel) {
+    switch (values.channel) {
       case 'email':
         if (values.contact_type === 'new') {
           await contactService.postOneEmail(values.receiver, values.email)
